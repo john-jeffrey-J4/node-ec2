@@ -21,10 +21,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
+
+    - run: npm -v
+    - run: npm install -g npm@latest
+
+    - run: npm cache clean --force
+
+    - run: rm -rf node_modules
+    - run: npm install
+
+    - run: node -v
+    - run: npm -v
+
+    # Add more debugging information if needed
+    - run: npm ci --verbose
+    - run: pm2 list
+
+    # Restart your PM2-managed process
     - run: pm2 restart BackendAPI
